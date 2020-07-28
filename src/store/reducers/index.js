@@ -25,6 +25,7 @@ import MapExplorer from 'routes/MapExplorer/MapExplorer.store'
 import ModeratorsSettings from 'routes/CommunitySettings/ModeratorsSettingsTab/ModeratorsSettingsTab.store'
 import FullPageModal from 'routes/FullPageModal/FullPageModal.store'
 import AllTopics from 'routes/AllTopics/AllTopics.store'
+import SavedSearches from 'routes/UserSettings/UserSettings.store'
 import Search from 'routes/Search/Search.store'
 import queryResults from './queryResults'
 import FeedList from 'components/FeedList/FeedList.store'
@@ -71,6 +72,7 @@ export const combinedReducers = combineReducers({
   PeopleTyping,
   PrimaryLayout,
   PostEditor,
+  SavedSearches,
   Search,
   SkillsSection
 })
