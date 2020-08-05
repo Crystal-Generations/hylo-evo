@@ -2,6 +2,9 @@ import { push } from 'connected-react-router'
 import { connect } from 'react-redux'
 import { get, pick } from 'lodash/fp'
 import { FETCH_POSTS_MAP } from 'store/constants'
+import {
+  fetchSavedSearches, deleteSearch
+} from '../UserSettings/UserSettings.store'
 import getQuerystringParam from 'store/selectors/getQuerystringParam'
 import presentPost from 'store/presenters/presentPost'
 import getCommunityForCurrentRoute from 'store/selectors/getCommunityForCurrentRoute'
@@ -94,6 +97,7 @@ export function mapStateToProps (state, props) {
 
   return {
     centerLocation: centerLocation || { lat: 35.442845, lng: 7.916598 },
+    currentUser: me,
     features,
     fetchMembersParam,
     fetchPostsParam,
@@ -106,6 +110,7 @@ export function mapStateToProps (state, props) {
     publicCommunities,
     querystringParams,
     routeParams,
+    searches: state.SavedSearches.searches,
     topics,
     zoom: centerLocation ? 10 : 0
   }
@@ -118,6 +123,8 @@ export function mapDispatchToProps (dispatch, props) {
     fetchMembers: (params) => () => dispatch(fetchMembers({ ...params })),
     fetchPosts: (params) => () => dispatch(fetchPosts({ ...params })),
     fetchPublicCommunities: (params) => () => dispatch(fetchPublicCommunities({ ...params })),
+    fetchSavedSearches: (userId) => () => dispatch(fetchSavedSearches(userId)),
+    deleteSearch: (searchId) => dispatch(deleteSearch(searchId)),
     showDetails: (postId) => dispatch(push(postUrl(postId, { ...routeParams, view: 'map' }, querystringParams))),
     showCommunityDetails: (communityId) => dispatch(push(communityMapDetailUrl(communityId, { ...routeParams, view: 'map' }, querystringParams))),
     gotoMember: (memberId) => dispatch(push(personUrl(memberId, routeParams.slug, routeParams.networkSlug))),
@@ -128,8 +135,8 @@ export function mapDispatchToProps (dispatch, props) {
 }
 
 export function mergeProps (stateProps, dispatchProps, ownProps) {
-  const { fetchMembersParam, fetchPostsParam, fetchPublicCommunitiesParam } = stateProps
-  const { fetchMembers, fetchPosts, fetchPublicCommunities, storeFetchPostsParam } = dispatchProps
+  const { fetchMembersParam, fetchPostsParam, fetchPublicCommunitiesParam, currentUser } = stateProps
+  const { fetchMembers, fetchPosts, fetchPublicCommunities, fetchSavedSearches, storeFetchPostsParam } = dispatchProps
 
   return {
     ...ownProps,
@@ -138,6 +145,7 @@ export function mergeProps (stateProps, dispatchProps, ownProps) {
     fetchMembers: fetchMembers(fetchMembersParam),
     fetchPublicCommunities: fetchPublicCommunities(fetchPublicCommunitiesParam),
     fetchPosts: fetchPosts(fetchPostsParam),
+    fetchSavedSearches: fetchSavedSearches(currentUser.id),
     storeFetchPostsParam: storeFetchPostsParam(fetchPostsParam)
   }
 }

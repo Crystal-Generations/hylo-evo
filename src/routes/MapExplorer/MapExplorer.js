@@ -57,6 +57,8 @@ export default class MapExplorer extends React.Component {
     Object.keys(FEATURE_TYPES).forEach(featureType => {
       this.refs[featureType] = React.createRef()
     })
+    
+    this.props.fetchSavedSearches();
 
     // this.fetchOrShowCached()
   }
@@ -198,12 +200,14 @@ export default class MapExplorer extends React.Component {
 
   render () {
     const {
+      deleteSearch,
       features,
       fetchPostsParam,
       filters,
       querystringParams,
       pending,
       routeParams,
+      searches,
       topics
       // publicCommunities
     } = this.props
@@ -249,7 +253,7 @@ export default class MapExplorer extends React.Component {
         Post Types: <strong>{Object.keys(filters.featureTypes).filter(t => filters.featureTypes[t]).length}/5</strong>
       </button>
       <img styleName={cx('savedSearchesButton')} onClick={this.toggleSavedSearches} src={heart} />
-      { showSavedSearches ? (<SavedSearches toggle={this.toggleSavedSearches} />) : '' }
+      { showSavedSearches ? (<SavedSearches toggle={this.toggleSavedSearches} deleteSearch={deleteSearch} searches={searches}/>) : '' }
       <div styleName={cx('featureTypeFilters', { 'featureFiltersOpen': showFeatureFilters })}>
         <h3>What do you want to see on the map?</h3>
         {['member', 'request', 'offer', 'resource', 'event'].map(featureType => {
