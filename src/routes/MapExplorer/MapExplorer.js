@@ -7,8 +7,10 @@ import Loading from 'components/Loading'
 import { FEATURE_TYPES } from './MapExplorer.store'
 import Map from 'components/Map/Map'
 import MapDrawer from './MapDrawer'
+import SavedSearches from './SavedSearches'
 import { createIconLayerFromPostsAndMembers } from 'components/Map/layers/clusterLayer'
 import { createIconLayerFromCommunities } from 'components/Map/layers/iconLayer'
+import { heart } from 'util/assets'
 // import { createScatterplotLayerFromPublicCommunities } from 'components/Map/layers/scatterplotLayer'
 import SwitchStyled from 'components/SwitchStyled'
 import styles from './MapExplorer.scss'
@@ -190,6 +192,10 @@ export default class MapExplorer extends React.Component {
     this.setState({ showFeatureFilters: !this.state.showFeatureFilters })
   }
 
+  toggleSavedSearches = (e) => {
+    this.setState({ showSavedSearches: !this.state.showSavedSearches })
+  }
+
   render () {
     const {
       features,
@@ -207,6 +213,7 @@ export default class MapExplorer extends React.Component {
       communityIconLayer,
       showDrawer,
       showFeatureFilters,
+      showSavedSearches,
       viewport
     } = this.state
 
@@ -241,6 +248,8 @@ export default class MapExplorer extends React.Component {
       <button styleName={cx('toggleFeatureFiltersButton', { 'featureFiltersOpen': showFeatureFilters })} onClick={this.toggleFeatureFilters}>
         Post Types: <strong>{Object.keys(filters.featureTypes).filter(t => filters.featureTypes[t]).length}/5</strong>
       </button>
+      <img styleName={cx('savedSearchesButton')} onClick={this.toggleSavedSearches} src={heart} />
+      { showSavedSearches ? (<SavedSearches toggle={this.toggleSavedSearches} />) : '' }
       <div styleName={cx('featureTypeFilters', { 'featureFiltersOpen': showFeatureFilters })}>
         <h3>What do you want to see on the map?</h3>
         {['member', 'request', 'offer', 'resource', 'event'].map(featureType => {
